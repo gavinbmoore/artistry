@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import { TextHoverEffect } from "@/components/ui/hover-text-effect"
+import { ChevronDown } from "lucide-react"
 import { motion } from "framer-motion"
 
 export default function Hero() {
@@ -46,7 +48,7 @@ export default function Hero() {
 
       draw() {
         if (!ctx) return
-        ctx.fillStyle = "rgba(255, 255, 255, 0.5)"
+        ctx.fillStyle = "rgba(255, 255, 255, 0.3)"
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
         ctx.fill()
@@ -81,18 +83,38 @@ export default function Hero() {
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
+  const scrollToSecond = () => {
+    const secondSection = document.querySelector("#second-section")
+    if (secondSection) {
+      secondSection.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full bg-gray-800" />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
-        <motion.h1
-          className="mb-6 text-6xl font-bold tracking-tighter sm:text-7xl lg:text-8xl"
+        <div className="w-full max-w-4xl h-32">
+          <TextHoverEffect text="GAV.MO" duration={0.3} />
+        </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ delay: 3, duration: 0.8 }}
+          onClick={scrollToSecond}
         >
-          GAV.MO
-        </motion.h1>
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+            className="flex flex-col items-center text-green-200 hover:text-white transition-colors"
+          >
+            <span className="text-sm mb-2">Scroll to explore</span>
+            <ChevronDown className="h-6 w-6" />
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   )
